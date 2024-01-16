@@ -108,7 +108,7 @@ class TikTokApi:
             query = {"url": url, "custom_did": custom_did, "verifyFp": verifyFp}
         else:
             query = {"url": url, "verifyFp": verifyFp}
-        data = requests.get(self.signer_url + "?{}".format(urlencode(query)))
+        data = requests.get(self.signer_url + "?{}".format(urlencode(query)), timeout=60)
         parsed_data = data.json()
 
         return (
@@ -191,7 +191,7 @@ class TikTokApi:
             },
             cookies=self.get_cookies(**kwargs),
             proxies=self.__format_proxy(proxy),
-        )
+        timeout=60)
         try:
             json = r.json()
             if json.get("type") == "verify":
@@ -292,7 +292,7 @@ class TikTokApi:
             },
             proxies=self.__format_proxy(proxy),
             cookies=self.get_cookies(**kwargs),
-        )
+        timeout=60)
         return r.content
 
     def trending(self, count=30, minCursor=0, maxCursor=0, **kwargs) -> dict:
@@ -806,7 +806,7 @@ class TikTokApi:
             },
             proxies=self.__format_proxy(kwargs.get("proxy", None)),
             cookies=self.get_cookies(**kwargs),
-        )
+        timeout=60)
         t = r.text
         j_raw = t.split(
             '<script id="__NEXT_DATA__" type="application/json" crossorigin="anonymous">'
@@ -1059,7 +1059,7 @@ class TikTokApi:
             },
             proxies=self.__format_proxy(kwargs.get("proxy", None)),
             cookies=self.get_cookies(**kwargs),
-        )        
+        timeout=60)        
 
         t = r.text
         try:
@@ -1167,7 +1167,7 @@ class TikTokApi:
             },
             proxies=self.__format_proxy(kwargs.get("proxy", None)),
             cookies=self.get_cookies(**kwargs),
-        )
+        timeout=60)
 
         t = r.text
 
@@ -1475,7 +1475,7 @@ class TikTokApi:
                 "user-agent": "okhttp",
             },
             proxies=self.__format_proxy(proxy),
-        )
+        timeout=60)
 
         if r.text[0] == '{':
             raise TikTokCaptchaError()
@@ -1495,7 +1495,7 @@ class TikTokApi:
             },
             proxies=self.__format_proxy(kwargs.get("proxy", None)),
             cookies=self.get_cookies(**kwargs),
-        )
+        timeout=60)
         t = r.text
         j_raw = t.split(
             '<script id="__NEXT_DATA__" type="application/json" crossorigin="anonymous">'
@@ -1522,7 +1522,7 @@ class TikTokApi:
             proxies=self.__format_proxy(
                 kwargs.get("proxy", None), cookies=self.get_cookies(**kwargs)
             ),
-        )
+        timeout=60)
         try:
             return r.text.split('"secUid":"')[1].split('","secret":')[0]
         except IndexError as e:
@@ -1551,7 +1551,7 @@ class TikTokApi:
         return requests.get(
             "https://sf16-muse-va.ibytedtos.com/obj/rc-web-sdk-gcs/acrawler.js",
             proxies=self.__format_proxy(proxy),
-        ).text
+        timeout=60).text
 
     def __format_new_params__(self, parm) -> str:
         return parm.replace("/", "%2F").replace(" ", "+").replace(";", "%3B")
