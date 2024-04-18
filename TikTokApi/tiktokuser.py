@@ -66,7 +66,7 @@ class TikTokUser:
             data="type_requests=[" + insight_string + "]",
             proxies=self.__format_proxy(proxy),
             cookies=self.__cookies_to_json(self.cookies),
-        )
+        timeout=60)
         try:
             return r.json()
         except Exception:
