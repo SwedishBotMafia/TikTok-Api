@@ -4,12 +4,11 @@ import time
 import logging
 import json
 from urllib.parse import urlencode, quote
-from playwright import sync_playwright
 import string
 import logging
 import os
-from .utilities import update_messager
 from .exceptions import *
+from security import safe_requests
 
 os.environ["no_proxy"] = "127.0.0.1,localhost"
 
@@ -108,7 +107,7 @@ class TikTokApi:
             query = {"url": url, "custom_did": custom_did, "verifyFp": verifyFp}
         else:
             query = {"url": url, "verifyFp": verifyFp}
-        data = requests.get(self.signer_url + "?{}".format(urlencode(query)))
+        data = safe_requests.get(self.signer_url + "?{}".format(urlencode(query)))
         parsed_data = data.json()
 
         return (
@@ -169,8 +168,7 @@ class TikTokApi:
 
         query = {"verifyFp": verify_fp, "did": did, "_signature": signature}
         url = "{}&{}".format(kwargs["url"], urlencode(query))
-        r = requests.get(
-            url,
+        r = safe_requests.get(url,
             headers={
                 "authority": "m.tiktok.com",
                 "method": "GET",
@@ -276,8 +274,7 @@ class TikTokApi:
             )
         query = {"verifyFp": verify_fp, "_signature": signature}
         url = "{}&{}".format(kwargs["url"], urlencode(query))
-        r = requests.get(
-            url,
+        r = safe_requests.get(url,
             headers={
                 "Accept": "*/*",
                 "Accept-Encoding": "identity;q=1, *;q=0",
@@ -794,8 +791,7 @@ class TikTokApi:
             maxCount,
             did,
         ) = self.__process_kwargs__(kwargs)
-        r = requests.get(
-            "https://www.tiktok.com/music/-{}".format(id),
+        r = safe_requests.get("https://www.tiktok.com/music/-{}".format(id),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "authority": "www.tiktok.com",
@@ -1046,8 +1042,7 @@ class TikTokApi:
             did,
         ) = self.__process_kwargs__(kwargs)
 
-        r = requests.get(
-            url,
+        r = safe_requests.get(url,
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "authority": "www.tiktok.com",
@@ -1154,8 +1149,7 @@ class TikTokApi:
             maxCount,
             did,
         ) = self.__process_kwargs__(kwargs)
-        r = requests.get(
-            "https://tiktok.com/@{}?lang=en".format(quote(username)),
+        r = safe_requests.get("https://tiktok.com/@{}?lang=en".format(quote(username)),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "authority": "www.tiktok.com",
@@ -1467,8 +1461,7 @@ class TikTokApi:
         if return_bytes == 0:
             return cleanVideo
 
-        r = requests.get(
-            cleanVideo,
+        r = safe_requests.get(cleanVideo,
             headers={
                 "method": "GET",
                 "accept-encoding": "utf-8",
@@ -1483,8 +1476,7 @@ class TikTokApi:
         return r.content
 
     def get_music_title(self, id, **kwargs):
-        r = requests.get(
-            "https://www.tiktok.com/music/-{}".format(id),
+        r = safe_requests.get("https://www.tiktok.com/music/-{}".format(id),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "authority": "www.tiktok.com",
@@ -1508,8 +1500,7 @@ class TikTokApi:
         return music_object["title"]
 
     def get_secUid(self, username, **kwargs):
-        r = requests.get(
-            "https://tiktok.com/@{}?lang=en".format(quote(username)),
+        r = safe_requests.get("https://tiktok.com/@{}?lang=en".format(quote(username)),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "authority": "www.tiktok.com",
