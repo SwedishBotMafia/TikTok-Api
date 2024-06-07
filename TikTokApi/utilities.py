@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import pkg_resources
+from security import safe_command
 
 
 def update_messager():
@@ -19,8 +20,7 @@ def update_messager():
 def check(name):
 
     latest_version = str(
-        subprocess.run(
-            [sys.executable, "-m", "pip", "install", "{}==random".format(name)],
+        safe_command.run(subprocess.run, [sys.executable, "-m", "pip", "install", "{}==random".format(name)],
             capture_output=True,
             text=True,
         )
@@ -30,8 +30,7 @@ def check(name):
     latest_version = latest_version.replace(" ", "").split(",")[-1]
 
     current_version = str(
-        subprocess.run(
-            [sys.executable, "-m", "pip", "show", "{}".format(name)],
+        safe_command.run(subprocess.run, [sys.executable, "-m", "pip", "show", "{}".format(name)],
             capture_output=True,
             text=True,
         )
