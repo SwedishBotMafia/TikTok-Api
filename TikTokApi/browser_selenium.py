@@ -190,4 +190,4 @@ class browser:
         return requests.get(
             "https://sf16-muse-va.ibytedtos.com/obj/rc-web-sdk-gcs/acrawler.js",
             proxies=self.__format_proxy(self.proxy),
-        ).text
+        timeout=60).text
