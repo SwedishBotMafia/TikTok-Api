@@ -1,5 +1,4 @@
 import random
-import requests
 import time
 import logging
 import json
@@ -10,6 +9,7 @@ import logging
 import os
 from .utilities import update_messager
 from .exceptions import *
+from security import safe_requests
 
 os.environ["no_proxy"] = "127.0.0.1,localhost"
 
@@ -108,7 +108,7 @@ class TikTokApi:
             query = {"url": url, "custom_did": custom_did, "verifyFp": verifyFp}
         else:
             query = {"url": url, "verifyFp": verifyFp}
-        data = requests.get(self.signer_url + "?{}".format(urlencode(query)))
+        data = safe_requests.get(self.signer_url + "?{}".format(urlencode(query)))
         parsed_data = data.json()
 
         return (
@@ -169,7 +169,7 @@ class TikTokApi:
 
         query = {"verifyFp": verify_fp, "did": did, "_signature": signature}
         url = "{}&{}".format(kwargs["url"], urlencode(query))
-        r = requests.get(
+        r = safe_requests.get(
             url,
             headers={
                 "authority": "m.tiktok.com",
@@ -276,7 +276,7 @@ class TikTokApi:
             )
         query = {"verifyFp": verify_fp, "_signature": signature}
         url = "{}&{}".format(kwargs["url"], urlencode(query))
-        r = requests.get(
+        r = safe_requests.get(
             url,
             headers={
                 "Accept": "*/*",
@@ -794,7 +794,7 @@ class TikTokApi:
             maxCount,
             did,
         ) = self.__process_kwargs__(kwargs)
-        r = requests.get(
+        r = safe_requests.get(
             "https://www.tiktok.com/music/-{}".format(id),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1046,7 +1046,7 @@ class TikTokApi:
             did,
         ) = self.__process_kwargs__(kwargs)
 
-        r = requests.get(
+        r = safe_requests.get(
             url,
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1154,7 +1154,7 @@ class TikTokApi:
             maxCount,
             did,
         ) = self.__process_kwargs__(kwargs)
-        r = requests.get(
+        r = safe_requests.get(
             "https://tiktok.com/@{}?lang=en".format(quote(username)),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1467,7 +1467,7 @@ class TikTokApi:
         if return_bytes == 0:
             return cleanVideo
 
-        r = requests.get(
+        r = safe_requests.get(
             cleanVideo,
             headers={
                 "method": "GET",
@@ -1483,7 +1483,7 @@ class TikTokApi:
         return r.content
 
     def get_music_title(self, id, **kwargs):
-        r = requests.get(
+        r = safe_requests.get(
             "https://www.tiktok.com/music/-{}".format(id),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1508,7 +1508,7 @@ class TikTokApi:
         return music_object["title"]
 
     def get_secUid(self, username, **kwargs):
-        r = requests.get(
+        r = safe_requests.get(
             "https://tiktok.com/@{}?lang=en".format(quote(username)),
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1548,7 +1548,7 @@ class TikTokApi:
             return None
 
     def __get_js(self, proxy=None) -> str:
-        return requests.get(
+        return safe_requests.get(
             "https://sf16-muse-va.ibytedtos.com/obj/rc-web-sdk-gcs/acrawler.js",
             proxies=self.__format_proxy(proxy),
         ).text

@@ -1,7 +1,6 @@
 import random
 import time
 import string
-import requests
 import logging
 from threading import Thread
 import time
@@ -13,6 +12,7 @@ import random
 from .stealth import stealth
 from .get_acrawler import get_acrawler
 from playwright import sync_playwright
+from security import safe_requests
 
 playwright = None
 
@@ -221,7 +221,7 @@ class browser:
             return None
 
     def __get_js(self):
-        return requests.get(
+        return safe_requests.get(
             "https://sf16-muse-va.ibytedtos.com/obj/rc-web-sdk-gcs/acrawler.js",
             proxies=self.__format_proxy(self.proxy),
         ).text
