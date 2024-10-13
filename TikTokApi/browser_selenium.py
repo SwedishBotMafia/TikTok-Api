@@ -1,4 +1,3 @@
-import random
 import time
 import string
 import requests
@@ -6,10 +5,10 @@ import logging
 from threading import Thread
 import time
 import datetime
-import random
 from selenium_stealth import stealth
 from selenium import webdriver
 from .get_acrawler import get_acrawler
+import secrets
 
 class browser:
     def __init__(
@@ -130,7 +129,7 @@ class browser:
         for i in range(36):
             if uuid[i] != 0:
                 continue
-            r = int(random.random() * chars_len)
+            r = int(secrets.SystemRandom().random() * chars_len)
             uuid[i] = chars[int((3 & r) | 8 if i == 19 else r)]
 
         return f'verify_{scenario_title.lower()}_{"".join(uuid)}'
@@ -151,7 +150,7 @@ class browser:
         if kwargs.get("custom_did") is not None:
             did = kwargs.get("custom_did", None)
         elif self.did is None:
-            did = str(random.randint(10000, 999999999))
+            did = str(secrets.SystemRandom().randint(10000, 999999999))
         else:
             did = self.did
 

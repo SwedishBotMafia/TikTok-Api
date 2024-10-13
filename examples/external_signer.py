@@ -1,8 +1,8 @@
-import random
 from TikTokApi import browser
 from TikTokApi import TikTokApi
 from flask import Flask, request, jsonify
 from gevent import monkey
+import secrets
 
 monkey.patch_all()
 
@@ -22,7 +22,7 @@ def sign_url():
         return jsonify({"success": False, "error": "You must provide a URL"})
 
     if did is not None:
-        did = str(random.randint(10000, 999999999))
+        did = str(secrets.SystemRandom().randint(10000, 999999999))
     verifyFp, did, _signature = signing_browser.sign_url(url=url, custom_did=did)
 
     return jsonify(

@@ -1,4 +1,3 @@
-import random
 import time
 import string
 import requests
@@ -6,13 +5,13 @@ import logging
 from threading import Thread
 import time
 import datetime
-import random
 
 
 # Import Detection From Stealth
 from .stealth import stealth
 from .get_acrawler import get_acrawler
 from playwright import sync_playwright
+import secrets
 
 playwright = None
 
@@ -106,12 +105,12 @@ class browser:
     def create_page(self, set_useragent=False):
         iphone = playwright.devices["iPhone 11 Pro"]
         iphone["viewport"] = {
-            "width": random.randint(320, 1920),
-            "height": random.randint(320, 1920),
+            "width": secrets.SystemRandom().randint(320, 1920),
+            "height": secrets.SystemRandom().randint(320, 1920),
         }
-        iphone["deviceScaleFactor"] = random.randint(1, 3)
-        iphone["isMobile"] = random.randint(1, 2) == 1
-        iphone["hasTouch"] = random.randint(1, 2) == 1
+        iphone["deviceScaleFactor"] = secrets.SystemRandom().randint(1, 3)
+        iphone["isMobile"] = secrets.SystemRandom().randint(1, 2) == 1
+        iphone["hasTouch"] = secrets.SystemRandom().randint(1, 2) == 1
 
         context = self.browser.newContext(**iphone)
         if set_useragent:
@@ -152,7 +151,7 @@ class browser:
         for i in range(36):
             if uuid[i] != 0:
                 continue
-            r = int(random.random() * chars_len)
+            r = int(secrets.SystemRandom().random() * chars_len)
             uuid[i] = chars[int((3 & r) | 8 if i == 19 else r)]
 
         return f'verify_{scenario_title.lower()}_{"".join(uuid)}'
@@ -163,8 +162,7 @@ class browser:
             raise Exception("sign_url required a url parameter")
         page = self.create_page()
         verifyFp = "".join(
-            random.choice(
-                string.ascii_lowercase + string.ascii_uppercase + string.digits
+            secrets.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits
             )
             for i in range(16)
         )
@@ -179,7 +177,7 @@ class browser:
         if kwargs.get("custom_did") is not None:
             did = kwargs.get("custom_did", None)
         elif self.did is None:
-            did = str(random.randint(10000, 999999999))
+            did = str(secrets.SystemRandom().randint(10000, 999999999))
         else:
             did = self.did
 
