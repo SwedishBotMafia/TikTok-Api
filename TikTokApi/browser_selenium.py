@@ -1,7 +1,6 @@
 import random
 import time
 import string
-import requests
 import logging
 from threading import Thread
 import time
@@ -10,6 +9,7 @@ import random
 from selenium_stealth import stealth
 from selenium import webdriver
 from .get_acrawler import get_acrawler
+from security import safe_requests
 
 class browser:
     def __init__(
@@ -187,7 +187,7 @@ class browser:
             return None
 
     def __get_js(self):
-        return requests.get(
+        return safe_requests.get(
             "https://sf16-muse-va.ibytedtos.com/obj/rc-web-sdk-gcs/acrawler.js",
             proxies=self.__format_proxy(self.proxy),
         ).text
