@@ -1,4 +1,3 @@
-import random
 import requests
 import time
 import logging
@@ -10,6 +9,7 @@ import logging
 import os
 from .utilities import update_messager
 from .exceptions import *
+import secrets
 
 os.environ["no_proxy"] = "127.0.0.1,localhost"
 
@@ -217,7 +217,7 @@ class TikTokApi:
                 raise JSONDecodeFailure() from e
 
     def get_cookies(self, **kwargs):
-        did = kwargs.get("custom_did", ''.join(random.choice(string.digits) for num in range(19)))
+        did = kwargs.get("custom_did", ''.join(secrets.choice(string.digits) for num in range(19)))
         if kwargs.get("custom_verifyFp") == None:
             if self.custom_verifyFp != None:
                 verifyFp = self.custom_verifyFp
@@ -231,7 +231,7 @@ class TikTokApi:
                 "tt_webid": did,
                 "tt_webid_v2": did,
                 "tt_csrf_token": "".join(
-                    random.choice(string.ascii_uppercase + string.ascii_lowercase)
+                    secrets.choice(string.ascii_uppercase + string.ascii_lowercase)
                     for i in range(16)
                 ),
                 "s_v_web_id": verifyFp
@@ -241,7 +241,7 @@ class TikTokApi:
                 "tt_webid": did,
                 "tt_webid_v2": did,
                 "tt_csrf_token": "".join(
-                    random.choice(string.ascii_uppercase + string.ascii_lowercase)
+                    secrets.choice(string.ascii_uppercase + string.ascii_lowercase)
                     for i in range(16)
                 )
             }
@@ -1243,7 +1243,7 @@ class TikTokApi:
         users = []
         unusedIDS = [startingId]
         while len(users) < count:
-            userId = random.choice(unusedIDS)
+            userId = secrets.choice(unusedIDS)
             newUsers = self.getSuggestedUsersbyID(userId=userId, **kwargs)
             unusedIDS.remove(userId)
 
@@ -1310,7 +1310,7 @@ class TikTokApi:
             count=count, startingId=startingId, **kwargs
         )
         while len(hashtags) < count and len(ids) != 0:
-            userId = random.choice(ids)
+            userId = secrets.choice(ids)
             newTags = self.getSuggestedHashtagsbyID(userId=userId["id"], **kwargs)
             ids.remove(userId)
 
@@ -1376,7 +1376,7 @@ class TikTokApi:
             count=count, startingId=startingId, **kwargs
         )
         while len(musics) < count and len(ids) != 0:
-            userId = random.choice(ids)
+            userId = secrets.choice(ids)
             newTags = self.getSuggestedMusicbyID(userId=userId["id"], **kwargs)
             ids.remove(userId)
 
@@ -1589,6 +1589,6 @@ class TikTokApi:
         language = kwargs.get("language", "en")
         proxy = kwargs.get("proxy", None)
         maxCount = kwargs.get("maxCount", 35)
-        did = kwargs.get("custom_did", ''.join(random.choice(string.digits) for num in range(19)))
+        did = kwargs.get("custom_did", ''.join(secrets.choice(string.digits) for num in range(19)))
 
         return region, language, proxy, maxCount, did
